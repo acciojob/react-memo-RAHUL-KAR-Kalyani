@@ -1,54 +1,64 @@
-// src/App.js
 import React, { useState, useMemo } from 'react';
+import '../styles/App.css'
 import UseMemo from './UseMemo';
 import ReactMemo from './ReactMemo';
 
-const App = () => {
-  const [tasks, setTasks] = useState([]);
+function App() {
+  const [tasks, setTasks] = useState([]); // Tasks from textbox
+  const [newTodos, setNewTodos] = useState([]); // New todos from button
+  const [inputValue, setInputValue] = useState('');
   const [counter, setCounter] = useState(0);
-  const [customTask, setCustomTask] = useState('');
 
   const handleAddTodo = () => {
-    setTasks([...tasks, 'New todo']);
+    setNewTodos([...newTodos, 'New todo']);
   };
 
   const handleIncrement = () => {
     setCounter(counter + 1);
   };
 
-  const handleCustomTaskChange = (e) => {
-    setCustomTask(e.target.value);
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
   };
 
-  const handleAddCustomTask = () => {
-    if (customTask.length > 5) {
-      setTasks([...tasks, customTask]);
-      setCustomTask('');
+  const handleSubmit = () => {
+    if (inputValue.trim().length > 5) {
+      setTasks([...tasks, inputValue.trim()]);
+      setInputValue('');
     }
   };
 
-  // Memoize tasks to avoid unnecessary re-renders
+  // Memoize the lists to demonstrate useMemo
+  const memoizedNewTodos = useMemo(() => newTodos, [newTodos]);
   const memoizedTasks = useMemo(() => tasks, [tasks]);
 
   return (
     <div>
-      <h1>Task Manager</h1>
-      <button onClick={handleAddTodo}>Add todo</button>
-      <button onClick={handleIncrement}>Increment Counter</button>
-      <p>Counter: {counter}</p>
-
-      <UseMemo tasks={memoizedTasks} />
-      <ReactMemo />
-
+      <h1>React.useMemo</h1>
+      <UseMemo newTodos={memoizedNewTodos} />
+      <button onClick={handleAddTodo}>Add Todo</button>
+      
+      <hr/>
+      <p>Counter: {counter}<button onClick={handleIncrement}> + </button></p>
+      <br/>
+      <h1>Expensive Calculation</h1>
+      <p>1000000000</p>
+      <hr/>
+      {/* UseMemo component displays the list of new todos */}
+      
+      {/* ReactMemo component displays the list of tasks */}
+      
       <input
         type="text"
-        value={customTask}
-        onChange={handleCustomTaskChange}
-        placeholder="Enter custom task (more than 5 characters)"
+        value={inputValue}
+        onChange={handleInputChange}
+        placeholder="Enter custom task"
       />
-      <button onClick={handleAddCustomTask}>Submit</button>
+      <button onClick={handleSubmit}>Submit</button>
+      <ReactMemo tasks={memoizedTasks} />
+      
     </div>
   );
-};
+}
 
 export default App;

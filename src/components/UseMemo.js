@@ -1,19 +1,16 @@
-// src/UseMemo.js
 import React from 'react';
 
-const UseMemo = ({ tasks }) => {
-  console.log('Rendering UseMemo');
-  
+function UseMemo({ newTodos }) {
   return (
     <div>
-      <h2>Task List:</h2>
+      <h2>My Todos</h2>
       <ul>
-        {tasks.map((task, index) => (
-          <li key={index}>{task}</li>
+        {newTodos.map((todo, index) => (
+          <li key={index} style={{listStyle:"none"}}>{todo}</li>
         ))}
       </ul>
     </div>
   );
-};
+}
 
-export default React.memo(UseMemo);
+export default UseMemo;
